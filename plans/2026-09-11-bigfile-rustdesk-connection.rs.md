@@ -155,3 +155,15 @@ derived from the structural signals above — they name concrete extractions
   its next tick.
 - implementer: `cron_surgical_impl.py` will pick this plan up once the reviewer
   marks it `READY` or `READY-WITH-WARNINGS`.
+
+
+## REVIEW 2026-09-11T18:16:16.564305+07:00
+
+**Verdict:** `NEEDS-REVISION`
+
+**Structural check:** objectives=12 file_header=✓ imports=✓ why=✓ dod=✓ security=✓
+
+**Gaps:**
+1. **Wrong language model.** The plan treats a `.rs` (Rust) file as TypeScript — extractions target `./constants.ts`, `index.ts` barrels, `pnpm`/`knip`/`ts-prune` tooling, and "prop drilling." None of these exist in Rust. The entire objective set is built on a JS/TS mental model that doesn't match the file.
+2. **OBJ-006–OBJ-012 are filler.** Seven near-identical "hardening passes" with identical acceptance criteria, no concrete targets, and no line/symbol anchors. This is exactly the generic N-slice filler the plan header claims to avoid.
+3. **OBJ-003/OBJ-004 depend on nonexistent structures.** "Barrel re-exports" and `knip` dead-import detection are JS/TS concepts. In Rust, `mod`/`use` hygiene is checked by `cargo check`/`clippy`, not `pnpm dlx knip`. These objectives can't be satisfied as written.
